@@ -12,5 +12,10 @@
             "name": "Markus Tacker",
             "email": "m@coderbyheart.de"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "Coderbyheart\\MailChimpBundle": ""
+        }
+    }
 }
