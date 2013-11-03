@@ -1,0 +1,15 @@
+{
+    "name": "coderbyheart/mailchimpbundle",
+    "description": "Thin abstraction layer for the MailChimp API 2.0.",
+    "require": {
+        "kriswallsmith/buzz": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Markus Tacker",
+            "email": "m@coderbyheart.de"
+        }
+    ],
+    "minimum-stability": "stable"
+}
