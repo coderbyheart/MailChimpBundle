@@ -17,6 +17,6 @@
         "psr-0": {
             "Coderbyheart\\MailChimpBundle": ""
         }
-    }
-    "target-dir": "Coderbyheart/MailChimpBundle",
+    },
+    "target-dir": "Coderbyheart/MailChimpBundle"
 }
