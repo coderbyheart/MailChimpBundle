@@ -4,6 +4,33 @@ Thin abstraction layer for the MailChimp API 2.0.
 
 All API endpoints are implemented … by not implementing them but taking advantage of the API's naming conventions.
 
+## Getting started
+
+Download coderbyheart/MailChimpBundle using composer:
+
+    php composer.phar require ~1.0.2
+
+Enable the Bundle:
+
+    <?php
+    // app/AppKernel.php
+    
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new FOS\UserBundle\FOSUserBundle(),
+        );
+    }
+
+Configure the Bundle:
+
+    // app/config/config.yml
+    
+    coderbyheart_mail_chimp:
+        api_key:     123-us1  # the api key provided by mailchimp
+        return_type: object   # return response data as 'object' or 'array'
+
 ## Usage
 
     $mailchimp = $container->get('mailchimp');
@@ -36,9 +63,6 @@ Parameters are provided via a hash as the methods argument.
 </tr>
 </tbody>
 </table>
-
-## Dependencies
-
 
 
 ## LICENSE
