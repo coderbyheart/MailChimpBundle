@@ -30,7 +30,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldFailOnInvalidApiKey()
     {
-        new Api('invalidkey');
+        new Api('invalidkey', 'object');
     }
 
     /**
@@ -112,9 +112,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $api->invalid_endpoint();
     }
 
-    protected function createTestObject()
+    protected function createTestObject($returnType = 'object')
     {
-        $api = new Api('abc-def');
+        $api = new Api('abc-def', $returnType);
+
         return $api;
     }
 }
