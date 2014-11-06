@@ -24,6 +24,7 @@ class CoderbyheartMailChimpExtension extends Extension
         $configuration = new Configuration();
         $config        = $this->processConfiguration($configuration, $configs);
         $container->setParameter('coderbyheart_mail_chimp.api_key', $config['api_key']);
+        $container->setParameter('coderbyheart_mail_chimp.return_type', $config['return_type']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
