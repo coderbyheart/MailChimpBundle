@@ -130,7 +130,12 @@ class Api
             }
             $this->$method($args);
         }
-        $result = $this->post(strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])), empty($args) ? array() : $args[0]);
+
+        $result = $this->post(
+            strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])),
+            empty($args) ? array() : $args[0]
+        );
+
         return $result;
     }
 }
