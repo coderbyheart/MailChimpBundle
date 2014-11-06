@@ -24,8 +24,12 @@ class Configuration implements ConfigurationInterface
         $rootNode    = $treeBuilder->root('coderbyheart_mail_chimp');
         $rootNode
             ->children()
-                ->scalarNode('api_key')->end()
+                ->scalarNode('api_key')
+                    ->isRequired()
+                    ->info('The API key provided by MailChimp')
+                ->end()
             ->end();
+
         return $treeBuilder;
     }
 }
