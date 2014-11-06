@@ -95,7 +95,7 @@ class Api
      */
     protected function getClient()
     {
-        return $this->client == null ? new Curl() : $this->client;
+        return $this->client === null ? new Curl() : $this->client;
     }
 
     /**
