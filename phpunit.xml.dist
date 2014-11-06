@@ -19,6 +19,12 @@
     <filter>
         <whitelist>
             <directory>./</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./Resources</directory>
+                <directory>./Tests</directory>
+                <directory>./DependencyInjection</directory>
+            </exclude>
         </whitelist>
     </filter>
 

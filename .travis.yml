@@ -12,3 +12,5 @@ install:
   - php composer.phar install --dev
 
 script: phpunit -c ./
+
+after_success: CODECLIMATE_REPO_TOKEN=5dea3dd0a6ed9ba7c0f110e6a1e11a1f94c1a1b9b9089dc2936c63d92a164aeb ./bin/test-reporter
