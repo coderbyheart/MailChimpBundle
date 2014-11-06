@@ -3,7 +3,7 @@
     "description": "Thin abstraction layer for the MailChimp API 2.0.",
     "type": "symfony-bundle",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "kriswallsmith/buzz": ">=0.11",
         "doctrine/annotations": "~1.2.1"
     },
