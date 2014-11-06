@@ -8,5 +8,4 @@ namespace Coderbyheart\MailChimpBundle\Exception;
 
 class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface
 {
-
 }
