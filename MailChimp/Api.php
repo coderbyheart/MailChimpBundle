@@ -55,7 +55,7 @@ class Api
         }
 
         if (!in_array($returnType, array('object', 'array'))) {
-            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.'), $returnType);
+            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.', $returnType));
         }
 
         list(, $this->dataCenter) = explode('-', $apiKey);
@@ -103,7 +103,7 @@ class Api
 
             if (isset($data['status']) && 'error' === $data['status']) {
                 throw new BadMethodCallException(
-                    sprintf('Request to "%s" failed: %s', $endpoint, $data->error)
+                    sprintf('Request to "%s" failed: %s', $endpoint, $data['error'])
                 );
             }
 
