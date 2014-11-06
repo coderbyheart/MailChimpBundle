@@ -132,7 +132,12 @@ class Api
         if (!preg_match('/([a-z]+)([A-Z][a-z_]+)$/', $method, $matches)) {
             throw new BadMethodCallException(sprintf('Invalid endpoint name: %s', $method));
         }
-        $result = $this->post(strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])), empty($args) ? array() : $args[0]);
+
+        $result = $this->post(
+            strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])),
+            empty($args) ? array() : $args[0]
+        );
+
         return $result;
     }
 
