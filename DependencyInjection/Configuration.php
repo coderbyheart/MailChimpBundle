@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                     ->ifNotInArray(array('object', 'array'))
                         ->thenInvalid('Invalid return_type "%s"')
                     ->end()
-                    ->info('Whether to return mailchimp API return values as object (default) or as array')
+                    ->info('Whether to return MailChimp API return values as object (default) or as array')
                 ->end()
             ->end();
 
