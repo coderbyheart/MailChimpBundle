@@ -23,7 +23,7 @@ Enable the Bundle:
     {
         $bundles = array(
             // ...
-            new FOS\UserBundle\FOSUserBundle(),
+            new Coderbyheart\MailChimpBundle\CoderbyheartMailChimpBundle(),
         );
     }
 
