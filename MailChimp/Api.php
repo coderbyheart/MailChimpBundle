@@ -10,6 +10,7 @@ namespace Coderbyheart\MailChimpBundle\MailChimp;
 use Coderbyheart\MailChimpBundle\Exception\BadMethodCallException;
 use Buzz\Browser;
 use Buzz\Client\Curl;
+use Buzz\Message\Response;
 
 class Api
 {
@@ -21,6 +22,11 @@ class Api
     /**
      * @var string
      */
+    private $returnType;
+
+    /**
+     * @var string
+     */
     private $dataCenter;
 
     /**
@@ -28,13 +34,28 @@ class Api
      */
     private $format = 'json';
 
-    public function __construct($apiKey)
+    /**
+     * Constructor.
+     *
+     * @param string $apiKey     MailChimp API key.
+     * @param string $returnType Return sucessful responses either as object or array.
+     *
+     * @throws BadMethodCallException
+     */
+    public function __construct($apiKey, $returnType)
     {
         if (!preg_match('/^[0-9a-f]+-[0-9a-z]+$/', $apiKey)) {
             throw new BadMethodCallException(sprintf('Api key "%s" has invalid format.', $apiKey));
         }
+
+        if (!in_array($returnType, array('object', 'array'))) {
+            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.'), $returnType);
+        }
+
         list($a, $this->dataCenter) = explode('-', $apiKey);
+
         $this->apiKey = $apiKey;
+        $this->returnType = $returnType;
     }
 
     protected function post($endpoint, $args)
@@ -49,7 +70,6 @@ class Api
         $response        = $browser->post(
             sprintf('https://%s.api.mailchimp.com/2.0/%s.%s', $this->dataCenter, $endpoint, $this->format),
             array(
-                //'Content-Type: application/x-www-form-urlencoded',
                 'Content-Type: application/json; charset=utf-8',
                 'Content-Length: ' . strlen($requestData),
                 'User-Agent: CoderbyheartMailChimpBundle',
@@ -57,14 +77,40 @@ class Api
             ),
             $requestData
         );
-        $responseContent = $response->getContent();
-        $responseData    = json_decode($responseContent);
-        if (property_exists($responseData, 'status') && $responseData->status == 'error') {
-            throw new BadMethodCallException(
-                sprintf('Request to "%s" failed: %s', $endpoint, $responseData->error)
-            );
+
+        return $this->validate($response, $endpoint);
+    }
+
+    /**
+     * Validates the response if there was an error on server-side.
+     *
+     * @param Response $response
+     *
+     * @return mixed
+     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     */
+    protected function validate(Response $response, $endpoint)
+    {
+        $content = $response->getContent();
+
+        if ('array' === $this->returnType) {
+            $data = json_decode($content, true);
+
+            if (isset($data['status']) && 'error' === $data['status']) {
+                throw new BadMethodCallException(
+                    sprintf('Request to "%s" failed: %s', $endpoint, $data->error)
+                );
+            }
+
+            return $data;
         }
-        return $responseData;
+
+        $data = json_decode($content);
+        if (property_exists($data, 'status') && 'error' === $data->status) {
+            throw new BadMethodCallException(sprintf('Request to "%s" failed: %s', $endpoint, $data->error));
+        }
+
+        return $data;
     }
 
     /**
@@ -87,4 +133,4 @@ class Api
         $result = $this->post(strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])), empty($args) ? array() : $args[0]);
         return $result;
     }
-} 
+}
