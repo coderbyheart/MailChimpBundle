@@ -23,7 +23,7 @@ class Api
     /**
      * @var string
      */
-    private $returnType;
+    private $returnType = 'object';
 
     /**
      * @var string
@@ -48,20 +48,15 @@ class Api
      *
      * @throws BadMethodCallException
      */
-    public function __construct($apiKey, $returnType)
+    public function __construct($apiKey)
     {
         if (!preg_match('/^[0-9a-f]+-[0-9a-z]+$/', $apiKey)) {
             throw new BadMethodCallException(sprintf('Api key "%s" has invalid format.', $apiKey));
         }
 
-        if (!in_array($returnType, array('object', 'array'))) {
-            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.', $returnType));
-        }
-
         list(, $this->dataCenter) = explode('-', $apiKey);
 
         $this->apiKey = $apiKey;
-        $this->returnType = $returnType;
     }
 
     protected function post($endpoint, $args)
@@ -159,6 +154,25 @@ class Api
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
+        return $this;
+    }
+
+    /**
+     * Sets the return type of responses.
+     *
+     * @param string $returnType
+     *
+     * @return self
+     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     */
+    public function setReturnType($returnType)
+    {
+        if (!in_array($returnType, array('object', 'array'))) {
+            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.', $returnType));
+        }
+
+        $this->returnType = $returnType;
+
         return $this;
     }
 }

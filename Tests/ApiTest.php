@@ -30,7 +30,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldFailOnInvalidApiKey()
     {
-        new Api('invalidkey', 'object');
+        new Api('invalidkey');
     }
 
     /**
@@ -95,7 +95,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $api = $this->createTestObject($returnType);
+        $api = $this->createTestObject();
+        $api->setReturnType($returnType);
         $api->setClient($mockClient);
         $api->someEndpoint(array('batch' => array(array('email' => 'john.doe@example.com'))));
     }
@@ -122,7 +123,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldFailOnInvalidReturnType()
     {
-        new Api('123-us1', 'invalid');
+        $api = new Api('123-us1');
+        $api->setReturnType('invalid');
     }
 
     /**
@@ -155,7 +157,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $api = $this->createTestObject('array');
+        $api = $this->createTestObject();
+        $api->setReturnType('array');
         $api->setClient($mockClient);
         $result = $api->listsBatch_unsubscribe(array('batch' => array(array('email' => 'john.doe@example.com'))));
 
@@ -164,11 +167,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $result['error_count']);
     }
 
-    protected function createTestObject($returnType = 'object')
+    protected function createTestObject()
     {
-        $api = new Api('abc-def', $returnType);
-
-        return $api;
+        return new Api('abc-def');
     }
 
     public function failRequestReturnTypeProvider()
