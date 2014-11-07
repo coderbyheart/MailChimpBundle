@@ -8,7 +8,9 @@
     <services>
         <service id="mailchimp" class="%coderbyheart.mailchimp.api.class%">
             <argument>%coderbyheart_mail_chimp.api_key%</argument>
-            <argument>%coderbyheart_mail_chimp.return_type%</argument>
+            <call method="setReturnType">
+                <argument>%coderbyheart_mail_chimp.return_type%</argument>
+            </call>
         </service>
     </services>
 </container>
