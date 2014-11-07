@@ -78,39 +78,50 @@ class Api
             $requestData
         );
 
-        return $this->validate($response, $endpoint);
-    }
+        $method = 'parseAs' . ucfirst($this->returnType);
+        list($status, $errorMessage, $data) = $this->$method($response->getContent());
 
-    /**
-     * Validates the response if there was an error on server-side.
-     *
-     * @param Response $response
-     *
-     * @return mixed
-     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
-     */
-    protected function validate(Response $response, $endpoint)
-    {
-        $content = $response->getContent();
-
-        if ('array' === $this->returnType) {
-            $data = json_decode($content, true);
-
-            if (isset($data['status']) && 'error' === $data['status']) {
-                throw new BadMethodCallException(
-                    sprintf('Request to "%s" failed: %s', $endpoint, $data['error'])
-                );
-            }
-
-            return $data;
-        }
-
-        $data = json_decode($content);
-        if (property_exists($data, 'status') && 'error' === $data->status) {
-            throw new BadMethodCallException(sprintf('Request to "%s" failed: %s', $endpoint, $data->error));
+        if ('error' === $status) {
+            throw new BadMethodCallException(sprintf('Request to "%s" failed: %s', $endpoint, $errorMessage));
         }
 
         return $data;
+    }
+
+    /**
+     * Parses the content as array.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function parseAsArray($content)
+    {
+        $data = json_decode($content, true);
+
+        return array(
+            isset($data['status']) ? $data['status'] : false,
+            isset($data['error']) ? $data['error'] : false,
+            $data,
+        );
+    }
+
+    /**
+     * Parses the content as objects.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function parseAsObject($content)
+    {
+        $data = json_decode($content);
+
+        return array(
+            property_exists($data, 'status') ? $data->status : false,
+            property_exists($data, 'error') ? $data->error : false,
+            $data
+        );
     }
 
     /**
