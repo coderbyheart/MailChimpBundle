@@ -44,7 +44,6 @@ class Api
      * Constructor.
      *
      * @param string $apiKey     MailChimp API key.
-     * @param string $returnType Return sucessful responses either as object or array.
      *
      * @throws BadMethodCallException
      */
