@@ -10,6 +10,7 @@ use Buzz\Client\ClientInterface;
 use Coderbyheart\MailChimpBundle\Exception\BadMethodCallException;
 use Buzz\Browser;
 use Buzz\Client\Curl;
+use Buzz\Message\Response;
 
 class Api
 {
@@ -18,6 +19,11 @@ class Api
      * @var string
      */
     private $apiKey;
+
+    /**
+     * @var string
+     */
+    private $returnType = 'object';
 
     /**
      * @var string
@@ -34,12 +40,21 @@ class Api
      */
     private $client;
 
+    /**
+     * Constructor.
+     *
+     * @param string $apiKey     MailChimp API key.
+     *
+     * @throws BadMethodCallException
+     */
     public function __construct($apiKey)
     {
         if (!preg_match('/^[0-9a-f]+-[0-9a-z]+$/', $apiKey)) {
             throw new BadMethodCallException(sprintf('Api key "%s" has invalid format.', $apiKey));
         }
+
         list(, $this->dataCenter) = explode('-', $apiKey);
+
         $this->apiKey = $apiKey;
     }
 
@@ -54,7 +69,6 @@ class Api
         $response        = $browser->post(
             sprintf('https://%s.api.mailchimp.com/2.0/%s.%s', $this->dataCenter, $endpoint, $this->format),
             array(
-                //'Content-Type: application/x-www-form-urlencoded',
                 'Content-Type: application/json; charset=utf-8',
                 'Content-Length: ' . strlen($requestData),
                 'User-Agent: CoderbyheartMailChimpBundle',
@@ -62,14 +76,51 @@ class Api
             ),
             $requestData
         );
-        $responseContent = $response->getContent();
-        $responseData    = json_decode($responseContent);
-        if (property_exists($responseData, 'status') && $responseData->status == 'error') {
-            throw new BadMethodCallException(
-                sprintf('Request to "%s" failed: %s', $endpoint, $responseData->error)
-            );
+
+        $method = 'parseAs' . ucfirst($this->returnType);
+        list($status, $errorMessage, $data) = $this->$method($response->getContent());
+
+        if ('error' === $status) {
+            throw new BadMethodCallException(sprintf('Request to "%s" failed: %s', $endpoint, $errorMessage));
         }
-        return $responseData;
+
+        return $data;
+    }
+
+    /**
+     * Parses the content as array.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function parseAsArray($content)
+    {
+        $data = json_decode($content, true);
+
+        return array(
+            isset($data['status']) ? $data['status'] : false,
+            isset($data['error']) ? $data['error'] : false,
+            $data,
+        );
+    }
+
+    /**
+     * Parses the content as objects.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function parseAsObject($content)
+    {
+        $data = json_decode($content);
+
+        return array(
+            property_exists($data, 'status') ? $data->status : false,
+            property_exists($data, 'error') ? $data->error : false,
+            $data
+        );
     }
 
     /**
@@ -86,7 +137,12 @@ class Api
         if (!preg_match('/([a-z]+)([A-Z][a-z_]+)$/', $method, $matches)) {
             throw new BadMethodCallException(sprintf('Invalid endpoint name: %s', $method));
         }
-        $result = $this->post(strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])), empty($args) ? array() : $args[0]);
+
+        $result = $this->post(
+            strtolower($matches[1] . '/' . str_replace('_', '-', $matches[2])),
+            empty($args) ? array() : $args[0]
+        );
+
         return $result;
     }
 
@@ -111,4 +167,22 @@ class Api
         return $this;
     }
 
+    /**
+     * Sets the return type of responses.
+     *
+     * @param string $returnType
+     *
+     * @return self
+     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     */
+    public function setReturnType($returnType)
+    {
+        if (!in_array($returnType, array('object', 'array'))) {
+            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.', $returnType));
+        }
+
+        $this->returnType = $returnType;
+
+        return $this;
+    }
 }

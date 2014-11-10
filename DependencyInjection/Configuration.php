@@ -28,6 +28,14 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->info('The API key provided by MailChimp')
                 ->end()
+                ->scalarNode('return_type')
+                    ->defaultValue('object')
+                    ->validate()
+                    ->ifNotInArray(array('object', 'array'))
+                        ->thenInvalid('Invalid return_type "%s"')
+                    ->end()
+                    ->info('Whether to return MailChimp API return values as object (default) or as array')
+                ->end()
             ->end();
 
         return $treeBuilder;
