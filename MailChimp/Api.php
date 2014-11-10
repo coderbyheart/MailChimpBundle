@@ -6,11 +6,11 @@
 
 namespace Coderbyheart\MailChimpBundle\MailChimp;
 
-use Buzz\Client\ClientInterface;
-use Coderbyheart\MailChimpBundle\Exception\BadMethodCallException;
 use Buzz\Browser;
+use Buzz\Client\ClientInterface;
 use Buzz\Client\Curl;
-use Buzz\Message\Response;
+use Coderbyheart\MailChimpBundle\Exception\BadMethodCallException;
+use Coderbyheart\MailChimpBundle\Exception\InvalidArgumentException;
 
 class Api
 {
@@ -173,12 +173,12 @@ class Api
      * @param string $returnType
      *
      * @return self
-     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     * @throws InvalidArgumentException
      */
     public function setReturnType($returnType)
     {
         if (!in_array($returnType, array('object', 'array'))) {
-            throw new BadMethodCallException(sprintf('Invalid return type "%s" given.', $returnType));
+            throw new InvalidArgumentException(sprintf('Invalid return type "%s" given.', $returnType));
         }
 
         $this->returnType = $returnType;

@@ -118,7 +118,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      * @test
      * @group                    MailChimpBundle
      * @depends                  itShouldBeInstantiable
-     * @expectedException        \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     * @expectedException        \Coderbyheart\MailChimpBundle\Exception\InvalidArgumentException
      * @expectedExceptionMessage Invalid return type "invalid" given.
      */
     public function itShouldFailOnInvalidReturnType()
