@@ -14,6 +14,15 @@ use Coderbyheart\MailChimpBundle\Exception\InvalidArgumentException;
 
 class Api
 {
+    /**
+     * @constant string
+     */
+    const RETURN_OBJECT = 'object';
+
+    /**
+     * @constant string
+     */
+    const RETURN_ARRAY = 'array';
 
     /**
      * @var string
@@ -23,7 +32,7 @@ class Api
     /**
      * @var string
      */
-    private $returnType = 'object';
+    private $returnType;
 
     /**
      * @var string
@@ -55,7 +64,8 @@ class Api
 
         list(, $this->dataCenter) = explode('-', $apiKey);
 
-        $this->apiKey = $apiKey;
+        $this->apiKey     = $apiKey;
+        $this->returnType = static::RETURN_OBJECT;
     }
 
     protected function post($endpoint, $args)
@@ -78,7 +88,7 @@ class Api
         );
 
         switch ($this->returnType) {
-            case 'array':
+            case static::RETURN_ARRAY:
                 list($status, $errorMessage, $data) = $this->parseAsArray($response->getContent());
                 break;
             default:
@@ -182,7 +192,7 @@ class Api
      */
     public function setReturnType($returnType)
     {
-        if (!in_array($returnType, array('object', 'array'))) {
+        if (!in_array($returnType, array(static::RETURN_OBJECT, static::RETURN_ARRAY))) {
             throw new InvalidArgumentException(sprintf('Invalid return type "%s" given.', $returnType));
         }
 
