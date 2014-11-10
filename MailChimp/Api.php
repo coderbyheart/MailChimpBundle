@@ -77,8 +77,13 @@ class Api
             $requestData
         );
 
-        $method = 'parseAs' . ucfirst($this->returnType);
-        list($status, $errorMessage, $data) = $this->$method($response->getContent());
+        switch ($this->returnType) {
+            case 'array':
+                list($status, $errorMessage, $data) = $this->parseAsArray($response->getContent());
+                break;
+            default:
+                list($status, $errorMessage, $data) = $this->parseAsObject($response->getContent());
+        }
 
         if ('error' === $status) {
             throw new BadMethodCallException(sprintf('Request to "%s" failed: %s', $endpoint, $errorMessage));
