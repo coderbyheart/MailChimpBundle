@@ -8,6 +8,33 @@ All API endpoints are implemented … by not implementing them but taking advant
 
 [![Build Status](https://travis-ci.org/coderbyheart/MailChimpBundle.svg)](https://travis-ci.org/coderbyheart/MailChimpBundle) [![Code Climate](https://codeclimate.com/github/coderbyheart/MailChimpBundle/badges/gpa.svg)](https://codeclimate.com/github/coderbyheart/MailChimpBundle) [![Test Coverage](https://codeclimate.com/github/coderbyheart/MailChimpBundle/badges/coverage.svg)](https://codeclimate.com/github/coderbyheart/MailChimpBundle)
 
+## Getting started
+
+Download coderbyheart/MailChimpBundle using composer:
+
+    php composer.phar require ~1.0.2
+
+Enable the Bundle:
+
+    <?php
+    // app/AppKernel.php
+    
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new Coderbyheart\MailChimpBundle\CoderbyheartMailChimpBundle(),
+        );
+    }
+
+Configure the Bundle:
+
+    // app/config/config.yml
+    
+    coderbyheart_mail_chimp:
+        api_key:     123-us1  # the api key provided by mailchimp
+        return_type: object   # return response data as 'object' or 'array'
+
 ## Usage
 
     $mailchimp = $container->get('mailchimp');
@@ -23,3 +50,4 @@ Parameters are provided via a hash as the methods argument.
 | ------------------------- | ------------------------ | -------------------------- |
 | `lists/list`              | `listsList`              |                            |
 | `lists/batch-unsubscribe` | `listsBatch_unsubscribe` | `array('batch' => $batch)` |
+
