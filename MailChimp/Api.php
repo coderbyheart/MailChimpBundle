@@ -52,7 +52,7 @@ class Api
     /**
      * Constructor.
      *
-     * @param string $apiKey     MailChimp API key.
+     * @param string $apiKey MailChimp API key.
      *
      * @throws BadMethodCallException
      */
@@ -70,13 +70,13 @@ class Api
 
     protected function post($endpoint, $args)
     {
-        $request         = array_merge($args, array(
+        $request     = array_merge($args, array(
             'apikey' => $this->apiKey,
         ));
-        $requestData     = json_encode($request);
-        $client          = $this->getClient();
-        $browser         = new Browser($client);
-        $response        = $browser->post(
+        $requestData = json_encode($request);
+        $client      = $this->getClient();
+        $browser     = new Browser($client);
+        $response    = $browser->post(
             sprintf('https://%s.api.mailchimp.com/2.0/%s.%s', $this->dataCenter, $endpoint, $this->format),
             array(
                 'Content-Type: application/json; charset=utf-8',
@@ -145,7 +145,7 @@ class Api
      * @param $args
      *
      * @return mixed
-     * @throws \Coderbyheart\MailChimpBundle\Exception\BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($method, $args)
     {
