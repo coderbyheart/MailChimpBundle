@@ -10,9 +10,9 @@ All API endpoints are implemented … by not implementing them but taking advant
 
 ## Getting started
 
-Download coderbyheart/MailChimpBundle using composer:
+Install with composer:
 
-    php composer.phar require ~1.0.2
+    php composer.phar require coderbyheart/mailchimp-bundle
 
 Enable the Bundle:
 
