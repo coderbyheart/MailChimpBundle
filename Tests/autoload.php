@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author    Markus Tacker <m@cto.hiv>
+ * @author    Markus Tacker <m@coderbyheart.com>
  */
 
 spl_autoload_register(function ($class) {

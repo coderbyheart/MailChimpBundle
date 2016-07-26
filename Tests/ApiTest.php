@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author    Markus Tacker <m@cto.hiv>
+ * @author    Markus Tacker <m@coderbyheart.com>
  */
 
 namespace Coderbyheart\MailChimpBundle\MailChimp\Tests;
